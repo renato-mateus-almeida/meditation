@@ -55,6 +55,11 @@ const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 const particlesEl = document.getElementById('particles');
 const countdownEl = document.getElementById('countdown');
+const bgMusicEl = document.getElementById('bgMusic');
+
+const VOLUME_TARGET = 0.18;
+const VOLUME_STEP = 0.003;
+const FADE_SPEED = 50;
 
 let pattern = 'box';
 let duration = 300;
@@ -66,6 +71,8 @@ let sessionInterval = null;
 let phaseStartTime = 0;
 let phaseTotalDuration = 0;
 let phaseRemaining = 0;
+
+let fadeInterval = null;
 
 function pad(n) {
     return String(n).padStart(2, '0');
@@ -88,6 +95,19 @@ function setPhase(text) {
 function setControlsEnabled(enabled) {
     patternsEl.querySelectorAll('button').forEach(b => (b.disabled = !enabled));
     durationsEl.querySelectorAll('button').forEach(b => (b.disabled = !enabled));
+}
+
+function fadeVolume(target) {
+    clearInterval(fadeInterval);
+    fadeInterval = setInterval(() => {
+        const current = bgMusicEl.volume;
+        if (Math.abs(current - target) <= VOLUME_STEP) {
+            bgMusicEl.volume = target;
+            clearInterval(fadeInterval);
+            return;
+        }
+        bgMusicEl.volume = current + (target > current ? VOLUME_STEP : -VOLUME_STEP);
+    }, FADE_SPEED);
 }
 
 function runPhase(customDuration) {
@@ -137,6 +157,9 @@ function start() {
     setControlsEnabled(false);
     runPhase();
     startTimer();
+
+    bgMusicEl.play().catch(() => {});
+    fadeVolume(VOLUME_TARGET);
 }
 
 function pause() {
@@ -152,12 +175,14 @@ function pause() {
     phaseRemaining = Math.max(0, phaseTotalDuration - elapsed);
 
     countdownEl.style.opacity = '0';
+    fadeVolume(0);
     btnStart.textContent = 'Retomar';
 }
 
 function resume() {
     status = STATUS.RUNNING;
     btnStart.textContent = 'Pausar';
+    fadeVolume(VOLUME_TARGET);
     runPhase(phaseRemaining);
     startTimer();
 }
@@ -171,6 +196,7 @@ function finish() {
     timeLeft = 0;
     updateTimerDisplay();
     countdownEl.style.opacity = '0';
+    fadeVolume(0);
     setPhase('Concluído');
 
     circleEl.style.transition = 'transform 0.8s ease';
@@ -191,6 +217,7 @@ function reset() {
 
     updateTimerDisplay();
     countdownEl.style.opacity = '0';
+    fadeVolume(0);
     setPhase('Inspire');
 
     circleEl.style.transition = 'transform 0.6s ease';
@@ -263,6 +290,7 @@ function bindEvents() {
 }
 
 function init() {
+    bgMusicEl.volume = 0;
     updateTimerDisplay();
     descEl.textContent = PATTERNS[pattern].desc;
     createParticles();
