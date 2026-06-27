@@ -54,13 +54,14 @@ const descEl = document.getElementById('patternDesc');
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 const particlesEl = document.getElementById('particles');
+const countdownEl = document.getElementById('countdown');
 
 let pattern = 'box';
 let duration = 300;
 let timeLeft = duration;
 let status = STATUS.IDLE;
 let phaseIndex = 0;
-let phaseTimeout = null;
+let phaseInterval = null;
 let sessionInterval = null;
 let phaseStartTime = 0;
 let phaseTotalDuration = 0;
@@ -97,16 +98,25 @@ function runPhase(customDuration) {
     const dur = customDuration !== undefined ? customDuration : phase.duration;
 
     setPhase(phase.label);
+    countdownEl.style.opacity = '1';
     circleEl.style.transition = `transform ${dur}s linear`;
     circleEl.style.transform = `scale(${phase.scale})`;
 
     phaseStartTime = Date.now();
     phaseTotalDuration = dur;
 
-    phaseTimeout = setTimeout(() => {
-        phaseIndex = (phaseIndex + 1) % phases.length;
-        runPhase();
-    }, dur * 1000);
+    phaseInterval = setInterval(() => {
+        const elapsed = (Date.now() - phaseStartTime) / 1000;
+        const remaining = Math.max(1, Math.ceil(phaseTotalDuration - elapsed));
+        const plural = remaining === 1 ? 'segundo' : 'segundos';
+        countdownEl.textContent = `${remaining} ${plural}`;
+
+        if (elapsed >= phaseTotalDuration) {
+            clearInterval(phaseInterval);
+            phaseIndex = (phaseIndex + 1) % phases.length;
+            runPhase();
+        }
+    }, 250);
 }
 
 function startTimer() {
@@ -131,7 +141,7 @@ function start() {
 
 function pause() {
     status = STATUS.PAUSED;
-    clearTimeout(phaseTimeout);
+    clearInterval(phaseInterval);
     clearInterval(sessionInterval);
 
     const computed = getComputedStyle(circleEl).transform;
@@ -141,6 +151,7 @@ function pause() {
     const elapsed = (Date.now() - phaseStartTime) / 1000;
     phaseRemaining = Math.max(0, phaseTotalDuration - elapsed);
 
+    countdownEl.style.opacity = '0';
     btnStart.textContent = 'Retomar';
 }
 
@@ -153,12 +164,13 @@ function resume() {
 
 function finish() {
     status = STATUS.FINISHED;
-    clearTimeout(phaseTimeout);
+    clearInterval(phaseInterval);
     clearInterval(sessionInterval);
 
     phaseRemaining = 0;
     timeLeft = 0;
     updateTimerDisplay();
+    countdownEl.style.opacity = '0';
     setPhase('Concluído');
 
     circleEl.style.transition = 'transform 0.8s ease';
@@ -174,10 +186,11 @@ function reset() {
     phaseIndex = 0;
     phaseRemaining = 0;
 
-    clearTimeout(phaseTimeout);
+    clearInterval(phaseInterval);
     clearInterval(sessionInterval);
 
     updateTimerDisplay();
+    countdownEl.style.opacity = '0';
     setPhase('Inspire');
 
     circleEl.style.transition = 'transform 0.6s ease';
