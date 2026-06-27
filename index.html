@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditação — Respiração</title>
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="particles" id="particles"></div>
+        <div class="card">
+            <div class="card__timer" id="timer">05:00</div>
+
+            <div class="card__breath">
+                <div class="card__circle" id="circle">
+                    <span class="card__phase" id="phase">Inspire</span>
+                </div>
+            </div>
+
+            <div class="card__section">
+                <span class="card__label">Padrão de Respiração</span>
+                <div class="card__row" id="patterns">
+                    <button class="card__chip active" data-pattern="box">Box 4-4-4-4</button>
+                    <button class="card__chip" data-pattern="478">4-7-8</button>
+                    <button class="card__chip" data-pattern="simple">4-4</button>
+                </div>
+                <p class="card__desc" id="patternDesc">Equilibrado — inspira, segura, expira e segura por 4s cada</p>
+            </div>
+
+            <div class="card__section">
+                <span class="card__label">Duração</span>
+                <div class="card__row" id="durations">
+                    <button class="card__chip" data-duration="180">3 min</button>
+                    <button class="card__chip active" data-duration="300">5 min</button>
+                    <button class="card__chip" data-duration="600">10 min</button>
+                    <button class="card__chip" data-duration="900">15 min</button>
+                </div>
+            </div>
+
+            <div class="card__controls">
+                <button class="card__btn card__btn--primary" id="btnStart">Iniciar</button>
+                <button class="card__btn card__btn--ghost" id="btnReset">Reiniciar</button>
+            </div>
+        </div>
+    </div>
+    <script src="./scripts/index.js"></script>
+</body>
+</html>

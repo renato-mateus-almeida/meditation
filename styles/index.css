@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+}
+
+.wrapper {
+    height: 100dvh;
+    background-image: url('../assets/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ----------------------------------------
+   Partículas
+   ---------------------------------------- */
+
+.particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+}
+
+@keyframes float-a {
+    0%   { transform: translateY(0) translateX(0); }
+    50%  { transform: translateY(-50vh) translateX(25px); }
+    100% { transform: translateY(-110vh) translateX(-15px); }
+}
+
+@keyframes float-b {
+    0%   { transform: translateY(0) translateX(0); }
+    50%  { transform: translateY(-50vh) translateX(-30px); }
+    100% { transform: translateY(-110vh) translateX(10px); }
+}
+
+@keyframes float-c {
+    0%   { transform: translateY(0) translateX(0); }
+    50%  { transform: translateY(-50vh) translateX(40px); }
+    100% { transform: translateY(-110vh) translateX(-25px); }
+}
+
+/* ----------------------------------------
+   Card
+   ---------------------------------------- */
+
+.card {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 440px;
+    padding: 40px 32px 36px;
+    backdrop-filter: blur(24px);
+    background-color: rgba(8, 12, 16, 0.7);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+/* -- Timer -- */
+
+.card__timer {
+    font-size: clamp(2.8rem, 8vw, 4.2rem);
+    font-weight: 500;
+    color: #f0f4f0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 4px;
+    text-shadow:
+        0 0 18px rgba(144, 200, 144, 0.35),
+        0 0 40px rgba(144, 200, 144, 0.15);
+}
+
+/* -- Círculo de Respiração -- */
+
+.card__breath {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card__circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(144, 200, 144, 0.18) 0%,
+        rgba(144, 200, 144, 0.04) 70%,
+        transparent 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 0 40px rgba(144, 200, 144, 0.12),
+        0 0 100px rgba(144, 200, 144, 0.06);
+    transition: transform 4s linear;
+}
+
+.card__phase {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f0f4f0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+    user-select: none;
+    text-shadow:
+        0 0 10px rgba(144, 200, 144, 0.5),
+        0 0 30px rgba(144, 200, 144, 0.25);
+}
+
+/* -- Seções -- */
+
+.card__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.card__label {
+    font-size: 0.7rem;
+    color: rgba(224, 232, 224, 0.45);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.card__row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card__desc {
+    font-size: 0.72rem;
+    color: rgba(224, 232, 224, 0.5);
+    text-align: center;
+    line-height: 1.5;
+    transition: opacity 0.25s ease;
+}
+
+/* -- Chips -- */
+
+.card__chip {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(224, 232, 224, 0.6);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: inherit;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.card__chip:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.card__chip.active {
+    background: rgba(144, 200, 144, 0.18);
+    border-color: rgba(144, 200, 144, 0.4);
+    color: #d8ead8;
+}
+
+.card__chip:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* -- Controles -- */
+
+.card__controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.card__btn {
+    padding: 12px 36px;
+    border-radius: 28px;
+    border: none;
+    font-size: 0.9rem;
+    font-family: inherit;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.card__btn--primary {
+    background: rgba(144, 200, 144, 0.22);
+    color: #dde8dd;
+    border: 1px solid rgba(144, 200, 144, 0.35);
+}
+
+.card__btn--primary:hover {
+    background: rgba(144, 200, 144, 0.3);
+}
+
+.card__btn--ghost {
+    background: transparent;
+    color: rgba(224, 232, 224, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card__btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(224, 232, 224, 0.75);
+}
