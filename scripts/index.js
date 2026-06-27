@@ -38,6 +38,13 @@ const PARTICLE_COLORS = [
 
 const FLOAT_ANIMS = ['float-a', 'float-b', 'float-c'];
 
+const STATUS = Object.freeze({
+    IDLE: 'idle',
+    RUNNING: 'running',
+    PAUSED: 'paused',
+    FINISHED: 'finished',
+});
+
 const timerEl = document.getElementById('timer');
 const circleEl = document.getElementById('circle');
 const phaseEl = document.getElementById('phase');
@@ -51,7 +58,7 @@ const particlesEl = document.getElementById('particles');
 let pattern = 'box';
 let duration = 300;
 let timeLeft = duration;
-let status = 'idle';
+let status = STATUS.IDLE;
 let phaseIndex = 0;
 let phaseTimeout = null;
 let sessionInterval = null;
@@ -83,7 +90,7 @@ function setControlsEnabled(enabled) {
 }
 
 function runPhase(customDuration) {
-    if (status !== 'running') return;
+    if (status !== STATUS.RUNNING) return;
 
     const phases = PATTERNS[pattern].phases;
     const phase = phases[phaseIndex];
@@ -111,7 +118,7 @@ function startTimer() {
 }
 
 function start() {
-    status = 'running';
+    status = STATUS.RUNNING;
     timeLeft = duration;
     phaseIndex = 0;
     updateTimerDisplay();
@@ -123,7 +130,7 @@ function start() {
 }
 
 function pause() {
-    status = 'paused';
+    status = STATUS.PAUSED;
     clearTimeout(phaseTimeout);
     clearInterval(sessionInterval);
 
@@ -138,14 +145,14 @@ function pause() {
 }
 
 function resume() {
-    status = 'running';
+    status = STATUS.RUNNING;
     btnStart.textContent = 'Pausar';
     runPhase(phaseRemaining);
     startTimer();
 }
 
 function finish() {
-    status = 'finished';
+    status = STATUS.FINISHED;
     clearTimeout(phaseTimeout);
     clearInterval(sessionInterval);
 
@@ -162,7 +169,7 @@ function finish() {
 }
 
 function reset() {
-    status = 'idle';
+    status = STATUS.IDLE;
     timeLeft = duration;
     phaseIndex = 0;
     phaseRemaining = 0;
@@ -213,7 +220,7 @@ function createParticles() {
 
 function bindEvents() {
     patternsEl.addEventListener('click', e => {
-        if (status !== 'idle') return;
+        if (status !== STATUS.IDLE) return;
         const chip = e.target.closest('[data-pattern]');
         if (!chip) return;
         pattern = chip.dataset.pattern;
@@ -223,7 +230,7 @@ function bindEvents() {
     });
 
     durationsEl.addEventListener('click', e => {
-        if (status !== 'idle') return;
+        if (status !== STATUS.IDLE) return;
         const chip = e.target.closest('[data-duration]');
         if (!chip) return;
         duration = parseInt(chip.dataset.duration, 10);
@@ -234,9 +241,9 @@ function bindEvents() {
     });
 
     btnStart.addEventListener('click', () => {
-        if (status === 'idle' || status === 'finished') start();
-        else if (status === 'running') pause();
-        else if (status === 'paused') resume();
+        if (status === STATUS.IDLE || status === STATUS.FINISHED) start();
+        else if (status === STATUS.RUNNING) pause();
+        else if (status === STATUS.PAUSED) resume();
     });
 
     btnReset.addEventListener('click', reset);
